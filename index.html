@@ -31,14 +31,17 @@
             let g = [];
             let b = [];
             let c = [];
+            let c2 = []; //par alas imagenes
+            let emoji=0
             let speed = [];
 
-            
+
             let Original = ["#156790", "#29DBBA", "#E57A44", "#EAF381", "#EA003B"];
             let Other = ["#db5461", "#686963", "#8aa29e", "#3d5467", "#f1edee"];
-            let Other2 = ["#0c0a3e","#7b1e7a","#b33f62","#f9564f","#f3c677"];
-            let Custom = ["#EC0B43","#58355E","#7AE7C7","#D6FFB7","#FFF689"];
-            let palleteNames = ["Original", "Other", "Other2", "Custom"];
+            let Other2 = ["#0c0a3e", "#7b1e7a", "#b33f62", "#f9564f", "#f3c677"];
+            let Custom = ["#EC0B43", "#58355E", "#7AE7C7", "#D6FFB7", "#FFF689"];
+            let imagenes = []
+            let palleteNames = ["Original", "Other", "Other2", "Custom", "Emojis"];
 
             let cantidadSlider;
             let sizeSlider;
@@ -51,6 +54,14 @@
             let palleteSel;
 
             let randomize;
+
+            function preload() {
+                imagenes[0] = loadImage('1.png');
+                imagenes[1] = loadImage('2.png');
+                imagenes[2] = loadImage('3.png');
+                imagenes[3] = loadImage('4.png');
+                imagenes[4] = loadImage('5.png');
+            }
 
             function setup() {
                 createCanvas(1270, 720);
@@ -149,20 +160,20 @@
                 palleteSel.style("font-size", "30px");
                 palleteSel.style("margin-left", "9px");
                 palleteSel.selected('Original');
-                
+
                 let customPalleteP = createP("Custom Palette Picker");
                 customPalleteP.style("font-size", "30px");
                 customPalleteP.style("font-family", "Calibri");
                 customPalleteP.style("margin", "0");
                 customPalleteP.position(width, 470);
-                
-                customCols=[]
-                for(let x=0; x<5; x++){
-                    customCols[x]= createColorPicker(Custom[x]);
-                    customCols[x].id("customCols"+x.toString())
-                    customCols[x].position(width+60*x, 510);
+
+                customCols = []
+                for (let x = 0; x < 5; x++) {
+                    customCols[x] = createColorPicker(Custom[x]);
+                    customCols[x].id("customCols" + x.toString())
+                    customCols[x].position(width + 60 * x, 510);
                 }
-                
+
                 button = createButton("Randomize");
                 button.position(width, 550);
                 button.size(150, 50);
@@ -183,8 +194,10 @@
                           g[i] = random(0,255)
                           b[i] = random(0,255)*/
                     c[i] = int(random(0, 5));
+                    c2[i] = imagenes[int(random(0, 5))];
                 }
                 rectMode(CENTER);
+                imageMode(CENTER);
             }
 
             function draw() {
@@ -232,14 +245,13 @@
                     rotate(x[i] + tan(frameCount / speed[i]) * rotationSpeed);
 
                     //fill(r[i],g[i],b[i])
-                    /*
-                    if (palleteSel.value() =="Custom"){
-                        customPallete()
+                    
+                    if (emoji==0){
+                        fill(palleteChanged()[c[i]]);
+                        square(0, 0, size);
+                    }else{
+                        image(c2[i], 0, 0,size,size);
                     }
-                    */
-                    fill(palleteChanged()[c[i]]);
-
-                    square(0, 0, size);
                     pop();
                 }
             }
@@ -281,30 +293,42 @@
                 strokeCheckbox.checked(random([true, false]));
                 waveCheckbox.checked(random([true, false]));
                 downCheckbox.checked(random([true, false]));
-                palleteSel.selected(palleteNames[int(random(0,palleteNames.length))]);
+                palleteSel.selected(palleteNames[int(random(0, palleteNames.length))]);
+                if (document.getElementById("palleteSel").value == "Emojis"){
+                    emoji=1;
+                }else{
+                    emoji=0;
+                }
             }
 
             function palleteChanged() {
-                switch(palleteSel.value()){
+                switch (palleteSel.value()) {
                     case "Original":
+                        emoji=0
                         return Original;
                         break;
                     case "Other":
+                        emoji=0
                         return Other;
                         break;
                     case "Other2":
+                        emoji=0
                         return Other2;
                         break;
                     case "Custom":
+                        emoji=0
                         customPallete()
                         return Custom;
+                        break;
+                    case "Emojis":
+                        emoji=1
                         break;
                 }
             }
 
-            function customPallete(){
-                for(let i=0; i<5;i++){
-                    Custom[i]=document.getElementById("customCols"+i.toString()).value
+            function customPallete() {
+                for (let i = 0; i < 5; i++) {
+                    Custom[i] = document.getElementById("customCols" + i.toString()).value
                 }
             }
         </script>
