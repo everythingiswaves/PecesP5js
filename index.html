@@ -7,246 +7,307 @@
     <title>Everything is waves - Peces</title>
 </head>
 <style>
-    h1{
-        display: block;
-        font-family: "roboto", sans-serif;
-       }
-    p, input, button, label{
+    p,
+    input,
+    button,
+    label {
         margin-left: 10px !important;
 
     }
-    label{
+
+    label {
         margin-left: 0;
     }
-
 </style>
 
 <body>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.min.js"></script>
     <div>
-    <script>
-        // setup the drawing
-        let x = [];
-        let y = [];
-        let r = [];
-        let g = [];
-        let b = [];
-        let c = [];
-        let speed = [];
+        <script>
+            // setup the drawing
+            let x = [];
+            let y = [];
+            let r = [];
+            let g = [];
+            let b = [];
+            let c = [];
+            let speed = [];
 
-        let colors = ["#156790", "#29DBBA", "#E57A44", "#EAF381", "#EA003B"];
+            
+            let Original = ["#156790", "#29DBBA", "#E57A44", "#EAF381", "#EA003B"];
+            let Other = ["#db5461", "#686963", "#8aa29e", "#3d5467", "#f1edee"];
+            let Other2 = ["#0c0a3e","#7b1e7a","#b33f62","#f9564f","#f3c677"];
+            let Custom = ["#EC0B43","#58355E","#7AE7C7","#D6FFB7","#FFF689"];
+            let palleteNames = ["Original", "Other", "Other2", "Custom"];
 
-        let cantidadSlider;
-        let sizeSlider;
-        let backgroundSlider;
-        let rotationSlider;
-        let strokeCheckbox;
-        let backgroundColor;
-        let waveCheckbox;
-        let downCheckbox;
+            let cantidadSlider;
+            let sizeSlider;
+            let backgroundSlider;
+            let rotationSlider;
+            let strokeCheckbox;
+            let backgroundColor;
+            let waveCheckbox;
+            let downCheckbox;
+            let palleteSel;
 
-        let randomize;
+            let randomize;
 
-        function setup() {
-            createCanvas(800, 800);
-            background(0);
+            function setup() {
+                createCanvas(1270, 720);
+                background(0);
 
-            cantidadSlider = createSlider(1, 600, 300);
-            cantidadSlider.id("cantidadSlider");
-            cantidadSlider.class("textos");
-            cantidadSlider.position(width, 20); // x and y
-            cantidadSlider.size(300, 40); // width and height
-            cantidad = document.getElementById("cantidadSlider").max;
-            let quantityP = createP("Quantity");
-            quantityP.class("textos");
-            quantityP.style("font-size", "30px");
-            quantityP.style("font-family", "Calibri");
-            quantityP.style("margin", "0");
-            quantityP.position(width, 0);
+                cantidadSlider = createSlider(1, 2000, 300);
+                cantidadSlider.id("cantidadSlider");
+                cantidadSlider.class("textos");
+                cantidadSlider.position(width, 20); // x and y
+                cantidadSlider.size(300, 40); // width and height
+                cantidad = document.getElementById("cantidadSlider").max;
 
-            sizeSlider = createSlider(5, 108, 43);
-            sizeSlider.id("sizeSlider");
-            sizeSlider.class("textos");
-            sizeSlider.position(width, 80); // x and y
-            sizeSlider.size(300, 40); // width and height
-            let sizeP = createP("Size");
-            sizeP.class("textos");
-            sizeP.style("font-size", "30px");
-            sizeP.style("font-family", "Calibri");
-            sizeP.style("margin", "0");
-            sizeP.position(width, 60);
+                let quantityP = createP("Quantity");
+                quantityP.class("textos");
+                quantityP.style("font-size", "30px");
+                quantityP.style("font-family", "Calibri");
+                quantityP.style("margin", "0");
+                quantityP.position(width, 0);
 
-            backgroundSlider = createSlider(0, 150, 75);
-            backgroundSlider.id("backgroundSlider");
-            backgroundSlider.position(width, 140); // x and y
-            backgroundSlider.size(300, 40); // width and height
-            let backgroundP = createP("Background alpha");
-            backgroundP.style("font-size", "30px");
-            backgroundP.style("font-family", "Calibri");
-            backgroundP.style("margin", "0");
-            backgroundP.position(width, 120);
+                sizeSlider = createSlider(1, 108, 43);
+                sizeSlider.id("sizeSlider");
+                sizeSlider.class("textos");
+                sizeSlider.position(width, 80); // x and y
+                sizeSlider.size(300, 40); // width and height
+                let sizeP = createP("Size");
+                sizeP.class("textos");
+                sizeP.style("font-size", "30px");
+                sizeP.style("font-family", "Calibri");
+                sizeP.style("margin", "0");
+                sizeP.position(width, 60);
 
-            rotationSlider = createSlider(0, 8, 4);
-            rotationSlider.id("rotationSlider");
-            rotationSlider.position(width, 200); // x and y
-            rotationSlider.size(300, 40); // width and height
-            let roatationP = createP("Rotation Speed");
-            roatationP.style("font-size", "30px");
-            roatationP.style("font-family", "Calibri");
-            roatationP.style("margin", "0");
-            roatationP.position(width, 180);
+                backgroundSlider = createSlider(0, 150, 75);
+                backgroundSlider.id("backgroundSlider");
+                backgroundSlider.position(width, 140); // x and y
+                backgroundSlider.size(300, 40); // width and height
+                let backgroundP = createP("Background alpha");
+                backgroundP.style("font-size", "30px");
+                backgroundP.style("font-family", "Calibri");
+                backgroundP.style("margin", "0");
+                backgroundP.position(width, 120);
 
-            backgroundColor = createColorPicker("#000000");
-            backgroundColor.position(width + 2, 275);
-            backgroundColor.size(300, 30);
-            let backgroundColorP = createP("Background Color");
-            backgroundColorP.style("font-size", "30px");
-            backgroundColorP.style("font-family", "Calibri");
-            backgroundColorP.style("margin", "0");
-            backgroundColorP.position(width, 240);
+                rotationSlider = createSlider(0, 8, 4);
+                rotationSlider.id("rotationSlider");
+                rotationSlider.position(width, 200); // x and y
+                rotationSlider.size(300, 40); // width and height
+                let roatationP = createP("Rotation Speed");
+                roatationP.style("font-size", "30px");
+                roatationP.style("font-family", "Calibri");
+                roatationP.style("margin", "0");
+                roatationP.position(width, 180);
 
-            strokeCheckbox = createCheckbox("Stroke", 0);
-            strokeCheckbox.position(width, 320);
-            strokeCheckbox.style("font-family", "Calibri");
-            strokeCheckbox.style("font-size", "30px");
-            const box = strokeCheckbox.elt.getElementsByTagName("input")[0];
-            box.style.width = "40px";
-            box.style.height = "40px";
-            box.style.margin = "0px";
+                backgroundColor = createColorPicker("#000000");
+                backgroundColor.position(width + 2, 275);
+                backgroundColor.size(300, 30);
+                let backgroundColorP = createP("Background Color");
+                backgroundColorP.style("font-size", "30px");
+                backgroundColorP.style("font-family", "Calibri");
+                backgroundColorP.style("margin", "0");
+                backgroundColorP.position(width, 240);
 
-            waveCheckbox = createCheckbox("Wave", 0);
-            waveCheckbox.position(width + 150, 320);
-            waveCheckbox.style("font-family", "Calibri");
-            waveCheckbox.style("font-size", "30px");
-            const box2 = waveCheckbox.elt.getElementsByTagName("input")[0];
-            box2.style.width = "40px";
-            box2.style.height = "40px";
-            box2.style.margin = "0px";
+                strokeCheckbox = createCheckbox("Stroke", 0);
+                strokeCheckbox.position(width, 320);
+                strokeCheckbox.style("font-family", "Calibri");
+                strokeCheckbox.style("font-size", "30px");
+                const box = strokeCheckbox.elt.getElementsByTagName("input")[0];
+                box.style.width = "40px";
+                box.style.height = "40px";
+                box.style.margin = "0px";
 
-            downCheckbox = createCheckbox("Down", 0);
-            downCheckbox.position(width, 370);
-            downCheckbox.style("font-family", "Calibri");
-            downCheckbox.style("font-size", "30px");
-            const box3 = downCheckbox.elt.getElementsByTagName("input")[0];
-            box3.style.width = "40px";
-            box3.style.height = "40px";
-            box3.style.margin = "0px";
+                waveCheckbox = createCheckbox("Wave", 0);
+                waveCheckbox.position(width + 150, 320);
+                waveCheckbox.style("font-family", "Calibri");
+                waveCheckbox.style("font-size", "30px");
+                const box2 = waveCheckbox.elt.getElementsByTagName("input")[0];
+                box2.style.width = "40px";
+                box2.style.height = "40px";
+                box2.style.margin = "0px";
 
-            button = createButton("Randomize");
-            button.position(width, 420);
-            button.size(150, 50);
-            button.style("font-size", "23px");
-            button.mousePressed(randomizeSliders);
+                downCheckbox = createCheckbox("Down", 0);
+                downCheckbox.position(width, 370);
+                downCheckbox.style("font-family", "Calibri");
+                downCheckbox.style("font-size", "30px");
+                const box3 = downCheckbox.elt.getElementsByTagName("input")[0];
+                box3.style.width = "40px";
+                box3.style.height = "40px";
+                box3.style.margin = "0px";
 
-            let signature = createP("~Everything is waves - 2021~");
-            signature.style("font-size", "30px");
-            signature.style("font-family", "Calibri");
-            signature.style("margin", "0");
-            signature.position(width, 480);
+                palleteSel = createSelect();
+                palleteSel.id("palleteSel")
+                palleteSel.position(width, 420);
+                palleteNames.forEach(element => {
+                    palleteSel.option(element);
+                });
+                palleteSel.changed(palleteChanged);
+                palleteSel.style("font-family", "Calibri");
+                palleteSel.style("font-size", "30px");
+                palleteSel.style("margin-left", "9px");
+                palleteSel.selected('Original');
+                
+                let customPalleteP = createP("Custom Palette Picker");
+                customPalleteP.style("font-size", "30px");
+                customPalleteP.style("font-family", "Calibri");
+                customPalleteP.style("margin", "0");
+                customPalleteP.position(width, 470);
+                
+                customCols=[]
+                for(let x=0; x<5; x++){
+                    customCols[x]= createColorPicker(Custom[x]);
+                    customCols[x].id("customCols"+x.toString())
+                    customCols[x].position(width+60*x, 510);
+                }
+                
+                button = createButton("Randomize");
+                button.position(width, 550);
+                button.size(150, 50);
+                button.style("font-size", "23px");
+                button.mousePressed(randomizeSliders);
 
-            for (let i = 0; i < cantidad; i++) {
-                x[i] = random(0, width);
-                y[i] = random(0, width);
-                speed[i] = random(40, 130);
-                /*r[i] = random(0,255)
-                      g[i] = random(0,255)
-                      b[i] = random(0,255)*/
-                c[i] = colors[int(random(0, 5))];
+                let signature = createP("~Everything is waves - 2021~");
+                signature.style("font-size", "30px");
+                signature.style("font-family", "Calibri");
+                signature.style("margin", "0");
+                signature.position(width, 600);
+
+                for (let i = 0; i < cantidad; i++) {
+                    x[i] = random(0, width);
+                    y[i] = random(0, width);
+                    speed[i] = random(40, 130);
+                    /*r[i] = random(0,255)
+                          g[i] = random(0,255)
+                          b[i] = random(0,255)*/
+                    c[i] = int(random(0, 5));
+                }
+                rectMode(CENTER);
             }
-            rectMode(CENTER);
-        }
 
-        function draw() {
-            background(
-                red(backgroundColor.color()),
-                green(backgroundColor.color()),
-                blue(backgroundColor.color()),
-                backgroundSlider.value()
-            );
+            function draw() {
+                background(
+                    red(backgroundColor.color()),
+                    green(backgroundColor.color()),
+                    blue(backgroundColor.color()),
+                    backgroundSlider.value()
+                );
 
-            cantidad = cantidadSlider.value();
-            size = sizeSlider.value();
-            rotationSpeed = rotationSlider.value();
+                cantidad = cantidadSlider.value();
+                size = sizeSlider.value();
+                rotationSpeed = rotationSlider.value();
 
-            if (strokeCheckbox.checked()) {
-                stroke(0);
-            } else {
-                noStroke();
-            }
-
-            //stroke(255)
-            for (let i = 0; i < cantidad; i++) {
-                push();
-                if (downCheckbox.checked()) {
-                    if (waveCheckbox.checked()) {
-                        translate(
-                            y[i] + sin(frameCount / speed[i]) * speed[i],
-                            x[i] + tan(frameCount / speed[i]) * 90
-                        );
-                    } else {
-                        translate(y[i], x[i] + tan(frameCount / speed[i]) * 90);
-                    }
+                if (strokeCheckbox.checked()) {
+                    stroke(0);
                 } else {
-                    if (waveCheckbox.checked()) {
-                        translate(
-                            x[i] + tan(frameCount / speed[i]) * 90,
-                            y[i] + sin(frameCount / speed[i]) * speed[i]
-                        );
-                    } else {
-                        translate(x[i] + tan(frameCount / speed[i]) * 90, y[i]);
-                    }
+                    noStroke();
                 }
 
-                //rotateX(frameCount/speed[i]*4)
-                rotate(x[i] + tan(frameCount / speed[i]) * rotationSpeed);
+                //stroke(255)
+                for (let i = 0; i < cantidad; i++) {
+                    push();
+                    if (downCheckbox.checked()) {
+                        if (waveCheckbox.checked()) {
+                            translate(
+                                y[i] + sin(frameCount / speed[i]) * speed[i],
+                                x[i] + tan(frameCount / speed[i]) * 90
+                            );
+                        } else {
+                            translate(y[i], x[i] + tan(frameCount / speed[i]) * 90);
+                        }
+                    } else {
+                        if (waveCheckbox.checked()) {
+                            translate(
+                                x[i] + tan(frameCount / speed[i]) * 90,
+                                y[i] + sin(frameCount / speed[i]) * speed[i]
+                            );
+                        } else {
+                            translate(x[i] + tan(frameCount / speed[i]) * 90, y[i]);
+                        }
+                    }
 
-                //fill(r[i],g[i],b[i])
-                fill(c[i]);
+                    //rotateX(frameCount/speed[i]*4)
+                    rotate(x[i] + tan(frameCount / speed[i]) * rotationSpeed);
 
-                square(0, 0, size);
-                pop();
+                    //fill(r[i],g[i],b[i])
+                    /*
+                    if (palleteSel.value() =="Custom"){
+                        customPallete()
+                    }
+                    */
+                    fill(palleteChanged()[c[i]]);
+
+                    square(0, 0, size);
+                    pop();
+                }
             }
-        }
 
-        function randomizeSliders() {
-            cantidadSlider.value(
-                int(
-                    random(
-                        document.getElementById("cantidadSlider").min,
-                        document.getElementById("cantidadSlider").max
+            function randomizeSliders() {
+                cantidadSlider.value(
+                    int(
+                        random(
+                            document.getElementById("cantidadSlider").min,
+                            document.getElementById("cantidadSlider").max
+                        )
                     )
-                )
-            );
+                );
 
-            sizeSlider.value(
-                int(
-                    random(
-                        document.getElementById("sizeSlider").min,
-                        document.getElementById("sizeSlider").max
+                sizeSlider.value(
+                    int(
+                        random(
+                            document.getElementById("sizeSlider").min,
+                            document.getElementById("sizeSlider").max
+                        )
                     )
-                )
-            );
-            backgroundSlider.value(
-                int(
-                    random(
-                        document.getElementById("backgroundSlider").min,
-                        document.getElementById("backgroundSlider").max
+                );
+                backgroundSlider.value(
+                    int(
+                        random(
+                            document.getElementById("backgroundSlider").min,
+                            document.getElementById("backgroundSlider").max
+                        )
                     )
-                )
-            );
-            rotationSlider.value(
-                int(
-                    random(
-                        document.getElementById("rotationSlider").min,
-                        document.getElementById("rotationSlider").max
+                );
+                rotationSlider.value(
+                    int(
+                        random(
+                            document.getElementById("rotationSlider").min,
+                            document.getElementById("rotationSlider").max
+                        )
                     )
-                )
-            );
-            strokeCheckbox.checked(random([true, false]));
-            waveCheckbox.checked(random([true, false]));
-            downCheckbox.checked(random([true, false]));
-        }
-    </script>
+                );
+                strokeCheckbox.checked(random([true, false]));
+                waveCheckbox.checked(random([true, false]));
+                downCheckbox.checked(random([true, false]));
+                palleteSel.selected(palleteNames[int(random(0,palleteNames.length))]);
+            }
+
+            function palleteChanged() {
+                switch(palleteSel.value()){
+                    case "Original":
+                        return Original;
+                        break;
+                    case "Other":
+                        return Other;
+                        break;
+                    case "Other2":
+                        return Other2;
+                        break;
+                    case "Custom":
+                        customPallete()
+                        return Custom;
+                        break;
+                }
+            }
+
+            function customPallete(){
+                for(let i=0; i<5;i++){
+                    Custom[i]=document.getElementById("customCols"+i.toString()).value
+                }
+            }
+        </script>
     </div>
 </body>
 
